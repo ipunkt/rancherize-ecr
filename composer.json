@@ -1,0 +1,26 @@
+{
+  "name": "ipunkt/rancherize-ecr",
+  "description": "Rancherize plugin to publish images to an ecr repository",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sven Speckmaier",
+      "email": "sps@ipunkt.biz"
+    }
+  ],
+  "autoload":{
+    "psr-4": {
+      "RancherizeEcr\\": "plugin/"
+    }
+  },
+
+  "require": {},
+  "require-dev": {
+    "ipunkt/rancherize": "dev-login-with-aws"
+  },
+  "extra":{
+    "rancherize-provider":""
+  }
+}
+
