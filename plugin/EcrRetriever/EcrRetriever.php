@@ -1,4 +1,4 @@
-<?php namespace RancherizeEcr\EventHandler;
+<?php namespace RancherizeEcr\EcrRetriever;
 use Rancherize\Docker\DockerAccount;
 use RancherizeEcr\EcrDockerAccount\EcrDockerAccount;
 use RancherizeEcr\EcrRetriever\Exceptions\EcrLoginFailedException;

@@ -4,9 +4,9 @@ use Rancherize\Docker\Events\DockerRetrievingAccountEvent;
 use Rancherize\Plugin\Provider;
 use Rancherize\Plugin\ProviderTrait;
 use RancherizeEcr\EcrParser\EcrParser;
+use RancherizeEcr\EcrRetriever\EcrRetriever;
 use RancherizeEcr\EcrTokenParser\GetTokenResponseParser;
 use RancherizeEcr\EventHandler\EcrEventHandler;
-use RancherizeEcr\EventHandler\EcrRetriever;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**

@@ -3,6 +3,7 @@
 use Rancherize\Docker\Events\DockerRetrievingAccountEvent;
 use RancherizeEcr\EcrParser\EcrParser;
 use RancherizeEcr\EcrParser\Exceptions\EcrNotEnabledException;
+use RancherizeEcr\EcrRetriever\EcrRetriever;
 
 /**
  * Class EcrEventHandler
