@@ -3,6 +3,7 @@
 use Rancherize\Docker\Events\DockerRetrievingAccountEvent;
 use Rancherize\Plugin\Provider;
 use Rancherize\Plugin\ProviderTrait;
+use RancherizeEcr\EventHandler\EcrEventHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -15,7 +16,7 @@ class EcrProvider implements Provider {
 	 */
 	public function register() {
 		$this->container['ecr-event-handler'] = function () {
-			return new \EcrEventHandler();
+			return new EcrEventHandler();
 		};
 	}
 
@@ -27,7 +28,7 @@ class EcrProvider implements Provider {
 		 */
 		$event = container('event');
 		/**
-		 * @var \EcrEventHandler
+		 * @var EcrEventHandler
 		 */
 		$listener = container('ecr-event-handler');
 
