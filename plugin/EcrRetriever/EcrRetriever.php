@@ -1,11 +1,35 @@
 <?php namespace RancherizeEcr\EventHandler;
 use Rancherize\Docker\DockerAccount;
 use RancherizeEcr\EcrDockerAccount\EcrDockerAccount;
+use RancherizeEcr\EcrRetriever\Exceptions\EcrLoginFailedException;
+use RancherizeEcr\EcrTokenParser\Exceptions\EcrParseResponseException;
+use RancherizeEcr\EcrTokenParser\GetTokenResponseParser;
+use Symfony\Component\Console\Helper\ProcessHelper;
+use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
+use Symfony\Component\Process\Process;
 
 /**
  * Class EcrRetriever
  */
 class EcrRetriever {
+	/**
+	 * @var ProcessHelper
+	 */
+	private $processHelper;
+	/**
+	 * @var GetTokenResponseParser
+	 */
+	private $tokenResponseParser;
+
+	/**
+	 * EcrRetriever constructor.
+	 * @param ProcessHelper $processHelper
+	 * @param GetTokenResponseParser $tokenResponseParser
+	 */
+	public function __construct(ProcessHelper $processHelper, GetTokenResponseParser $tokenResponseParser) {
+		$this->processHelper = $processHelper;
+		$this->tokenResponseParser = $tokenResponseParser;
+	}
 
 	/**
 	 * @param EcrAccount $account
@@ -27,12 +51,29 @@ class EcrRetriever {
 			'-e', 'AWS_DEFAULT_REGION='.$region,
 			'-v', getcwd().':/project',
 			'mesosphere/aws-cli',
+			"aws",
+			"--output",
+			"json",
+			"ecr",
+			"get-authorization-token",
 		];
+		$dummyOutput = new DummyOutput();
 
 		$dockerAccount = new EcrDockerAccount();
-		//$dockerAccount->setUsername();
-		//$dockerAccount->setPassword();
-		//$dockerAccount->setServer();
+		$this->processHelper->run($dummyOutput, $command, '', function($type, $json) use ($dockerAccount) {
+			if($type === Process::ERR)
+				throw new EcrLoginFailedException("Aws ecr login failed", 21);
+
+			try {
+				$ecrAuthData = $this->tokenResponseParser->parse($json);
+			} catch(EcrParseResponseException $e) {
+				throw new EcrLoginFailedException('Failed to parse ecr login response');
+			}
+
+			$dockerAccount->setUsername( $ecrAuthData->getUsername() );
+			$dockerAccount->setPassword( $ecrAuthData->getSecret() );
+			$dockerAccount->setServer( $ecrAuthData->getEndpoint() );
+		});
 		return $dockerAccount;
 	}
 
