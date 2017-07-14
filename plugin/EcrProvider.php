@@ -25,7 +25,7 @@ class EcrProvider implements Provider {
 			return new GetTokenResponseParser();
 		};
 		$this->container['ecr-retriever'] = function($c) {
-			return new EcrRetriever( $c['process-helper'], $c['get-token-response-parser'] );
+			return new EcrRetriever( $c['get-token-response-parser'] );
 
 		};
 		$this->container['ecr-event-handler'] = function ($c) {
