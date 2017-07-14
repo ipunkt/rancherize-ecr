@@ -4,7 +4,6 @@ use RancherizeEcr\EcrDockerAccount\EcrDockerAccount;
 use RancherizeEcr\EcrRetriever\Exceptions\EcrLoginFailedException;
 use RancherizeEcr\EcrTokenParser\Exceptions\EcrParseResponseException;
 use RancherizeEcr\EcrTokenParser\GetTokenResponseParser;
-use RancherizeEcr\EventHandler\EcrAccount;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 use Symfony\Component\Process\Process;
