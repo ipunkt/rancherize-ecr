@@ -20,7 +20,7 @@
     "ipunkt/rancherize": "dev-login-with-aws"
   },
   "extra":{
-    "rancherize-provider":""
+    "rancherize-provider":"RancherizeEcr\\EcrProvider"
   }
 }
 
