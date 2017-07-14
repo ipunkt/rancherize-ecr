@@ -7,6 +7,7 @@ use RancherizeEcr\EcrTokenParser\GetTokenResponseParser;
 use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class EcrRetriever
@@ -52,18 +53,20 @@ class EcrRetriever {
 			'-e', 'AWS_DEFAULT_REGION='.$region,
 			'-v', getcwd().':/project',
 			'mesosphere/aws-cli',
-			"aws",
 			"--output",
 			"json",
 			"ecr",
 			"get-authorization-token",
 		];
+		$process = ProcessBuilder::create( $command )
+			->setTimeout(null)
+			->getProcess();
 		$dummyOutput = new DummyOutput();
 
 		$dockerAccount = new EcrDockerAccount();
 
 		$processHelper = $this->getProcessHelper();
-		$processHelper->run($dummyOutput, $command, '', function($type, $json) use ($dockerAccount) {
+		$processHelper->run($dummyOutput, $process, nul, function($type, $json) use ($dockerAccount) {
 			if($type === Process::ERR)
 				throw new EcrLoginFailedException("Aws ecr login failed", 21);
 
