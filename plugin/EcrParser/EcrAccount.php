@@ -4,7 +4,7 @@
  * Class EcrAccount
  * @package RancherizeEcr\EcrParser
  */
-class EcrAccount implements \RancherizeEcr\EventHandler\EcrAccount {
+class EcrAccount implements \RancherizeEcr\EcrRetriever\EcrAccount {
 
 	/**
 	 * @var string

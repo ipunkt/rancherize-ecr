@@ -1,4 +1,4 @@
-<?php namespace RancherizeEcr\EventHandler;
+<?php namespace RancherizeEcr\EcrRetriever;
 
 /**
  * Interface EcrAccount
