@@ -68,7 +68,7 @@ class EcrRetriever {
 		$processHelper = $this->getProcessHelper();
 
 		$json= '';
-		$processHelper->run($dummyOutput, $process, nul, function($type, $data) use ($dockerAccount, &$json) {
+		$processHelper->run($dummyOutput, $process, null, function($type, $data) use ($dockerAccount, &$json) {
 			if($type === Process::ERR)
 				throw new EcrLoginFailedException("Aws ecr login failed", 21);
 
