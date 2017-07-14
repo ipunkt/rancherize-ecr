@@ -13,10 +13,6 @@ use Symfony\Component\Process\Process;
  */
 class EcrRetriever {
 	/**
-	 * @var ProcessHelper
-	 */
-	private $processHelper;
-	/**
 	 * @var GetTokenResponseParser
 	 */
 	private $tokenResponseParser;
@@ -62,7 +58,9 @@ class EcrRetriever {
 		$dummyOutput = new DummyOutput();
 
 		$dockerAccount = new EcrDockerAccount();
-		$this->processHelper->run($dummyOutput, $command, '', function($type, $json) use ($dockerAccount) {
+
+		$processHelper = $this->getProcessHelper();
+		$processHelper->run($dummyOutput, $command, '', function($type, $json) use ($dockerAccount) {
 			if($type === Process::ERR)
 				throw new EcrLoginFailedException("Aws ecr login failed", 21);
 
