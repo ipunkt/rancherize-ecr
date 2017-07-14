@@ -3,7 +3,10 @@
 use Rancherize\Docker\Events\DockerRetrievingAccountEvent;
 use Rancherize\Plugin\Provider;
 use Rancherize\Plugin\ProviderTrait;
+use RancherizeEcr\EcrParser\EcrParser;
+use RancherizeEcr\EcrTokenParser\GetTokenResponseParser;
 use RancherizeEcr\EventHandler\EcrEventHandler;
+use RancherizeEcr\EventHandler\EcrRetriever;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -15,8 +18,18 @@ class EcrProvider implements Provider {
 	/**
 	 */
 	public function register() {
-		$this->container['ecr-event-handler'] = function () {
-			return new EcrEventHandler();
+		$this->container['ecr-parser'] = function($c) {
+			return new EcrParser();
+		};
+		$this->container['get-token-response-parser']= function($c) {
+			return new GetTokenResponseParser();
+		};
+		$this->container['ecr-retriever'] = function($c) {
+			return new EcrRetriever( $c['process-helper'], $c['get-token-response-parser'] );
+
+		};
+		$this->container['ecr-event-handler'] = function ($c) {
+			return new EcrEventHandler(  $c['ecr-parser'], $c['ecr-retriever'] );
 		};
 	}
 
