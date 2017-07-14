@@ -25,6 +25,9 @@ class EcrRetriever {
 		$this->tokenResponseParser = $tokenResponseParser;
 	}
 
+	/**
+	 * @return ProcessHelper
+	 */
 	protected function getProcessHelper() {
 		return container('process-helper');
 	}
