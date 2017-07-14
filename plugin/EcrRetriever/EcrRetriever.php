@@ -66,20 +66,24 @@ class EcrRetriever {
 		$dockerAccount = new EcrDockerAccount();
 
 		$processHelper = $this->getProcessHelper();
-		$processHelper->run($dummyOutput, $process, nul, function($type, $json) use ($dockerAccount) {
+
+		$json= '';
+		$processHelper->run($dummyOutput, $process, nul, function($type, $data) use ($dockerAccount, &$json) {
 			if($type === Process::ERR)
 				throw new EcrLoginFailedException("Aws ecr login failed", 21);
 
-			try {
-				$ecrAuthData = $this->tokenResponseParser->parse($json);
-			} catch(EcrParseResponseException $e) {
-				throw new EcrLoginFailedException('Failed to parse ecr login response');
-			}
-
-			$dockerAccount->setUsername( $ecrAuthData->getUsername() );
-			$dockerAccount->setPassword( $ecrAuthData->getSecret() );
-			$dockerAccount->setServer( $ecrAuthData->getEndpoint() );
+			$json .= $data;
 		});
+
+		try {
+			$ecrAuthData = $this->tokenResponseParser->parse($json);
+		} catch(EcrParseResponseException $e) {
+			throw new EcrLoginFailedException('Failed to parse ecr login response');
+		}
+
+		$dockerAccount->setUsername( $ecrAuthData->getUsername() );
+		$dockerAccount->setPassword( $ecrAuthData->getSecret() );
+		$dockerAccount->setServer( $ecrAuthData->getEndpoint() );
 		return $dockerAccount;
 	}
 
